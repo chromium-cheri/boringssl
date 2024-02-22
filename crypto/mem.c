@@ -79,8 +79,11 @@ OPENSSL_MSVC_PRAGMA(warning(pop))
 
 #include "internal.h"
 
-
+#if defined(__CHERI_PURE_CAPABILITY__)
+#define OPENSSL_MALLOC_PREFIX sizeof(max_align_t)
+#else // defined(__CHERI_PURE_CAPABILITY__)
 #define OPENSSL_MALLOC_PREFIX 8
+#endif //  defined(__CHERI_PURE_CAPABILITY__)
 static_assert(OPENSSL_MALLOC_PREFIX >= sizeof(size_t), "size_t too large");
 
 #if defined(OPENSSL_ASAN)

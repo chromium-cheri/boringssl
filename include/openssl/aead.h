@@ -210,7 +210,12 @@ OPENSSL_EXPORT size_t EVP_AEAD_max_tag_len(const EVP_AEAD *aead);
 // AEAD operations.
 
 union evp_aead_ctx_st_state {
+#if defined(__CHERI_PURE_CAPABILITY__)
+  uint8_t opaque[800];
+  max_align_t max_alignment;
+#else // defined(__CHERI_PURE_CAPABILITY__)
   uint8_t opaque[564];
+#endif // defined(__CHERI_PURE_CAPABILITY__)
   uint64_t alignment;
 };
 
