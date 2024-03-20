@@ -176,7 +176,13 @@ union chacha20_poly1305_seal_data {
 
 static_assert(sizeof(union chacha20_poly1305_open_data) == 48,
               "wrong chacha20_poly1305_open_data size");
+#if defined(__CHERI_PURE_CAPABILITY__)
+// Adjust expected size of union chacha20_poly1305_seal_data for the
+// wider and stronger alignment requirements of capabilities.
+static_assert(sizeof(union chacha20_poly1305_seal_data) == 48 + 16 + 8 + 8,
+#else // defined(__CHERI_PURE_CAPABILITY__)
 static_assert(sizeof(union chacha20_poly1305_seal_data) == 48 + 8 + 8,
+#endif // defined(__CHERI_PURE_CAPABILITY__)
               "wrong chacha20_poly1305_seal_data size");
 
 OPENSSL_INLINE int chacha20_poly1305_asm_capable(void) {
